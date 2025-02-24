@@ -4,10 +4,12 @@ import com.spectrasonic.batteryminigame.Utils.MessageUtils;
 import com.spectrasonic.batteryminigame.listeners.BlockListener;
 import com.spectrasonic.batteryminigame.manager.BlockManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import lombok.Getter;
 
 public final class Main extends JavaPlugin {
 
     // Gestor de estados de bloques
+    @Getter
     private BlockManager blockManager;
 
     @Override

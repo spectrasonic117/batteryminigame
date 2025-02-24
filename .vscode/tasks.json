@@ -1,0 +1,26 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+        {
+            "type": "gradle",
+            "id": "/Users/spectra/Desktop/batteryminigamebuildbatteryminigame",
+            "script": "build",
+            "description": "Assembles and tests this project.",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "project": "batteryminigame",
+            "buildFile": "/Users/spectra/Desktop/batteryminigame/build.gradle",
+            "rootProject": "batteryminigame",
+            "projectFolder": "/Users/spectra/Desktop/batteryminigame",
+            "workspaceFolder": "/Users/spectra/Desktop/batteryminigame",
+            "args": "",
+            "javaDebug": false,
+            "problemMatcher": [
+                "$gradle"
+            ],
+            "label": "gradle: build"
+        }
+    ]
+}

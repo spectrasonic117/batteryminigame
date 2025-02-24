@@ -3,12 +3,13 @@ package com.spectrasonic.batteryminigame.manager;
 
 import com.spectrasonic.batteryminigame.model.BlockCoord;
 import org.bukkit.Location;
-
 import java.util.ArrayList;
+import lombok.Getter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Getter
 // Gestor para manejar las posiciones y estado de los bloques
 public class BlockManager {
     private final List<BlockCoord> blockCoords;
