@@ -21,7 +21,6 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class BlockListener implements Listener {
-    
     private final Main plugin;
     private final BlockManager blockManager;
     private final MiniMessage miniMessage = MiniMessage.miniMessage();
@@ -39,10 +38,7 @@ public class BlockListener implements Listener {
 
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent event) {
-        MessageUtils.sendConsoleMessage("Block placed - World: " + event.getBlock().getWorld().getName());
-        
         if (!event.getBlock().getWorld().getName().equals("world")) {
-            MessageUtils.sendConsoleMessage("Block rejected - Wrong world");
             return;
         }
 
@@ -51,15 +47,10 @@ public class BlockListener implements Listener {
         String batteryId = getBatteryId(itemInHand);
         
         if (batteryId == null) {
-            MessageUtils.sendConsoleMessage("Block rejected - Not a valid battery item");
             return;
         }
 
         Location loc = event.getBlock().getLocation();
-        MessageUtils.sendConsoleMessage("Checking coordinates - X: " + loc.getBlockX() + 
-                                     ", Y: " + loc.getBlockY() + 
-                                     ", Z: " + loc.getBlockZ());
-        
         BlockCoord coord = blockManager.getBlockCoord(loc);
         
         if (coord != null) {
@@ -67,54 +58,35 @@ public class BlockListener implements Listener {
             
             try {
                 NexoFurniture.place(batteryId, loc, Rotation.CLOCKWISE, BlockFace.UP);
-                
                 blockManager.setBlockState(coord, true);
-                String message = "<green><bold>Se ha puesto el bloque " + coord.getId();
+                String message = "<green><bold>Se ha puesto la Bateria " + coord.getId();
                 MessageUtils.sendBroadcastMessage(message);
-                MessageUtils.sendConsoleMessage(message);
-                
-                MessageUtils.sendConsoleMessage("Block states after placement: " + blockManager.getBlockStates());
 
                 if (blockManager.areAllPlaced()) {
-                    String opMessage = "<green><bold>Se han puesto todos los bloques";
+                    String opMessage = "<yellow><bold>[!] Se han puesto todas las Baterias";
                     Bukkit.getOnlinePlayers().stream()
                         .filter(Player::isOp)
                         .forEach(op -> op.sendMessage(miniMessage.deserialize(opMessage)));
-                    MessageUtils.sendConsoleMessage(opMessage);
                 }
             } catch (Exception e) {
-                MessageUtils.sendConsoleMessage("<red>Error placing battery: " + e.getMessage());
+                // Silent fail
             }
-        } else {
-            MessageUtils.sendConsoleMessage("<red>No matching coordinates found for placed block");
         }
     }
 
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
-        MessageUtils.sendConsoleMessage("Block broken - World: " + event.getBlock().getWorld().getName());
-        
         if (!event.getBlock().getWorld().getName().equals("world")) {
-            MessageUtils.sendConsoleMessage("Block break rejected - Wrong world");
             return;
         }
 
         Location loc = event.getBlock().getLocation();
-        MessageUtils.sendConsoleMessage("Checking break coordinates - X: " + loc.getBlockX() + 
-                                     ", Y: " + loc.getBlockY() + 
-                                     ", Z: " + loc.getBlockZ());
-        
         BlockCoord coord = blockManager.getBlockCoord(loc);
         
         if (coord != null) {
-            // The NexoFurniture API will handle the block removal automatically
             blockManager.setBlockState(coord, false);
-            String message = "<red><bold>Se ha quitado el bloque " + coord.getId();
+            String message = "<red><bold>[X] Se ha quitado la Bateria " + coord.getId();
             MessageUtils.sendBroadcastMessage(message);
-            MessageUtils.sendConsoleMessage(message);
-            MessageUtils.sendConsoleMessage("Block states after removal: " + blockManager.getBlockStates());
-        } else {
-            MessageUtils.sendConsoleMessage("<red>No matching coordinates found for broken block");
         }
     }
 }
