@@ -1,12 +1,18 @@
 package com.spectrasonic.batteryminigame;
 
 import com.spectrasonic.batteryminigame.Utils.MessageUtils;
+import com.spectrasonic.batteryminigame.listeners.BlockListener;
+import com.spectrasonic.batteryminigame.manager.BlockManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class Main extends JavaPlugin {
 
+    // Gestor de estados de bloques
+    private BlockManager blockManager;
+
     @Override
     public void onEnable() {
+        blockManager = new BlockManager();
 
         registerCommands();
         registerEvents();
@@ -24,6 +30,7 @@ public final class Main extends JavaPlugin {
     }
 
     public void registerEvents() {
-        // Set Events Here
+        getServer().getPluginManager().registerEvents(new BlockListener(this, blockManager), this);
     }
+
 }
