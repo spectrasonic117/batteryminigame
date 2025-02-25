@@ -66,7 +66,7 @@ public void onBlockPlace(BlockPlaceEvent event) {
         try {
             NexoFurniture.place(batteryId, loc, Rotation.CLOCKWISE, BlockFace.UP);
             blockManager.setBlockState(coord, true);
-            MessageUtils.sendBroadcastMessage("<green><bold>[✔️] Se ha puesto la Bateria <yellow><bold>" + coord.getId());
+            MessageUtils.sendBroadcastMessage("<green><bold>[✔] Se ha puesto la Bateria <yellow><bold>" + coord.getId());
 
             if (blockManager.areAllPlaced()) {
                 String opMessage = "<yellow><bold>[!] Se han puesto todas las Baterias";
