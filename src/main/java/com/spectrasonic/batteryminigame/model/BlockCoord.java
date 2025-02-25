@@ -3,7 +3,6 @@ package com.spectrasonic.batteryminigame.model;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-// Record que representa la coordenada del bloque y su identificador
 @Getter
 @AllArgsConstructor
 public class BlockCoord {

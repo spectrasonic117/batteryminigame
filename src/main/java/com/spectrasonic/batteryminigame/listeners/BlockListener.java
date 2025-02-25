@@ -18,6 +18,7 @@ import org.bukkit.inventory.ItemStack;
 import com.nexomc.nexo.api.NexoFurniture;
 import com.nexomc.nexo.api.NexoItems;
 import lombok.RequiredArgsConstructor;
+import org.bukkit.GameMode;
 
 @RequiredArgsConstructor
 public class BlockListener implements Listener {
@@ -36,7 +37,6 @@ public class BlockListener implements Listener {
         return null;
     }
 
-    @EventHandler
     public void onBlockPlace(BlockPlaceEvent event) {
         if (!event.getBlock().getWorld().getName().equals("world")) {
             return;
@@ -56,10 +56,9 @@ public class BlockListener implements Listener {
         if (coord != null) {
             event.setCancelled(true);
             
-            try {
-                NexoFurniture.place(batteryId, loc, Rotation.CLOCKWISE, BlockFace.UP);
+            if (placeFurniture(batteryId, loc)) {
                 blockManager.setBlockState(coord, true);
-                String message = "<green><bold>Se ha puesto la Bateria " + coord.getId();
+                String message = "<green><bold>[✔︎]Se ha puesto la Bateria " + coord.getId();
                 MessageUtils.sendBroadcastMessage(message);
 
                 if (blockManager.areAllPlaced()) {
@@ -68,8 +67,11 @@ public class BlockListener implements Listener {
                         .filter(Player::isOp)
                         .forEach(op -> op.sendMessage(miniMessage.deserialize(opMessage)));
                 }
-            } catch (Exception e) {
-                // Silent fail
+
+                // Remove item from inventory if in Adventure or Survival mode
+                if (player.getGameMode() == GameMode.ADVENTURE || player.getGameMode() == GameMode.SURVIVAL) {
+                    player.getInventory().removeItem(itemInHand);
+                }
             }
         }
     }
@@ -80,6 +82,7 @@ public class BlockListener implements Listener {
             return;
         }
 
+        Player player = event.getPlayer();
         Location loc = event.getBlock().getLocation();
         BlockCoord coord = blockManager.getBlockCoord(loc);
         
@@ -87,6 +90,23 @@ public class BlockListener implements Listener {
             blockManager.setBlockState(coord, false);
             String message = "<red><bold>[X] Se ha quitado la Bateria " + coord.getId();
             MessageUtils.sendBroadcastMessage(message);
+
+            // Return item to inventory if in Adventure or Survival mode
+            if (player.getGameMode() == GameMode.ADVENTURE || player.getGameMode() == GameMode.SURVIVAL) {
+                String batteryId = "bateria" + coord.getId(); // Assuming the ID corresponds to the battery
+                ItemStack batteryItem = NexoItems.itemFromId(batteryId).build();
+                player.getInventory().addItem(batteryItem);
+            }
+        }
+    }
+
+    private boolean placeFurniture(String batteryId, Location loc) {
+        try {
+            NexoFurniture.place(batteryId, loc, Rotation.CLOCKWISE, BlockFace.UP);
+            return true;
+        } catch (Exception e) {
+            // Log the exception or handle it accordingly
+            return false;
         }
     }
 }

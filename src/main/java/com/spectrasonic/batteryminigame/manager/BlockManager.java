@@ -1,4 +1,3 @@
-// File: src/main/java/com/spectrasonic/batteryminigame/manager/BlockManager.java
 package com.spectrasonic.batteryminigame.manager;
 
 import com.spectrasonic.batteryminigame.model.BlockCoord;
