@@ -18,6 +18,7 @@ import org.bukkit.inventory.ItemStack;
 import com.nexomc.nexo.api.NexoFurniture;
 import com.nexomc.nexo.api.NexoItems;
 import lombok.RequiredArgsConstructor;
+import org.bukkit.GameMode;
 
 @RequiredArgsConstructor
 public class BlockListener implements Listener {
@@ -36,7 +37,7 @@ public class BlockListener implements Listener {
         return null;
     }
 
-    @EventHandler
+   @EventHandler
     public void onBlockPlace(BlockPlaceEvent event) {
         if (!event.getBlock().getWorld().getName().equals("world")) {
             return;
@@ -50,6 +51,12 @@ public class BlockListener implements Listener {
             return;
         }
 
+        // Check if the player is in Survival or Adventure mode
+        if (player.getGameMode() == GameMode.SURVIVAL || player.getGameMode() == GameMode.ADVENTURE) {
+            // Remove one item from the player's hand
+            itemInHand.setAmount(itemInHand.getAmount() - 1);
+        }
+
         Location loc = event.getBlock().getLocation();
         BlockCoord coord = blockManager.getBlockCoord(loc);
         
@@ -59,8 +66,7 @@ public class BlockListener implements Listener {
             try {
                 NexoFurniture.place(batteryId, loc, Rotation.CLOCKWISE, BlockFace.UP);
                 blockManager.setBlockState(coord, true);
-                String message = "<green><bold>Se ha puesto la Bateria " + coord.getId();
-                MessageUtils.sendBroadcastMessage(message);
+                MessageUtils.sendBroadcastMessage("<green><bold>[✔] Puesta la Bateria <yellow><bold>" + coord.getId());
 
                 if (blockManager.areAllPlaced()) {
                     String opMessage = "<yellow><bold>[!] Se han puesto todas las Baterias";
@@ -85,8 +91,7 @@ public class BlockListener implements Listener {
         
         if (coord != null) {
             blockManager.setBlockState(coord, false);
-            String message = "<red><bold>[X] Se ha quitado la Bateria " + coord.getId();
-            MessageUtils.sendBroadcastMessage(message);
+            MessageUtils.sendBroadcastMessage("<red><bold>[X] Quitada la Bateria <yellow><bold>" + coord.getId());
         }
     }
 }
