@@ -66,7 +66,7 @@ public class BlockListener implements Listener {
             try {
                 NexoFurniture.place(batteryId, loc, Rotation.CLOCKWISE, BlockFace.UP);
                 blockManager.setBlockState(coord, true);
-                MessageUtils.sendBroadcastMessage("<green><bold>[✔] Puesta la Bateria " + coord.getId());
+                MessageUtils.sendBroadcastMessage("<green><bold>[✔] Puesta la Bateria <yellow><bold>" + coord.getId());
 
                 if (blockManager.areAllPlaced()) {
                     String opMessage = "<yellow><bold>[!] Se han puesto todas las Baterias";
@@ -91,7 +91,7 @@ public class BlockListener implements Listener {
         
         if (coord != null) {
             blockManager.setBlockState(coord, false);
-            MessageUtils.sendBroadcastMessage("<red><bold>[X] Quitada la Bateria " + coord.getId());
+            MessageUtils.sendBroadcastMessage("<red><bold>[X] Quitada la Bateria <yellow><bold>" + coord.getId());
         }
     }
 }
